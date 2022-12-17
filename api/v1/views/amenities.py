@@ -38,7 +38,7 @@ def delete_amenity(amenity_id=None):
     return jsonify({}), 200
 
 
-@app_views.route('/states/', methods=['POST'], strict_slashes=False)
+@app_views.route('/amenities/', methods=['POST'], strict_slashes=False)
 def post_state():
     """Creates a Amenity: POST /api/v1/amenities"""
     if not request.get_json():
@@ -50,9 +50,9 @@ def post_state():
     return make_response(jsonify(new_amenities.to_dict()), 201)
 
 
-@app_views.route('/states/<state_id>', methods=['PUT'],
+@app_views.route('/amenities/<amenity_id>', methods=['PUT'],
                  strict_slashes=False)
-def put_state(state_id):
+def put_state(amenity_id):
     """Updates a Amenity object: PUT"""
     amenities = storage.get(Amenity, amenity_id)
     if amenities is None:
