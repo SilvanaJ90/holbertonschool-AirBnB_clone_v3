@@ -90,4 +90,3 @@ class TestFileStorage(unittest.TestCase):
     def test_func_count(self):
         """ test def count, return count obj the cls"""
         self. assertCountEqual(5, 5, msg=None)
-
