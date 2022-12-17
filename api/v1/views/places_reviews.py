@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-""" d """
+"""Review object that handles all default RESTFul API actions"""
 
 from models import storage
 from models import review

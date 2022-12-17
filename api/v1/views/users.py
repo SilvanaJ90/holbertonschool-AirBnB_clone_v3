@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-""" Handles all requests for User objects """
+""" User object that handles all default RESTFul API  """
 
 from models import storage
 from models.user import User

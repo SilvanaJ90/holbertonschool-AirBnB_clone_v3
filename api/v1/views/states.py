@@ -1,6 +1,7 @@
 #!/usr/bin/python3
-
-"""  """
+"""
+State objects that handles all default RESTFul API
+"""
 
 from models import storage
 from models.state import State
@@ -12,7 +13,7 @@ from flask import request, jsonify, abort
                  strict_slashes=False,
                  methods=['GET', 'POST'])
 def all_states():
-    """  """
+    """ GET, POST Retrieves the list of  State objects """
     if request.method == 'GET':
         states = storage.all(State)
         states_list = []
@@ -40,7 +41,7 @@ def all_states():
                  strict_slashes=False,
                  methods=['GET', 'DELETE', 'PUT'])
 def states_by_id(state_id):
-    """  """
+    """ GET, DELETE and PUT requests for state by id """
     if request.method == 'GET':
         states = storage.all(State)
         for key, value in states.items():

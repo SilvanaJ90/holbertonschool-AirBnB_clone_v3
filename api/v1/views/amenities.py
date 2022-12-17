@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-""" doc """
+""" Amenity objects that handles all default RESTFul API """
 
 from models import storage
 from models.amenity import Amenity

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-"""  doc  """
+"""  Place objects that handles all default RESTFul API"""
 
 from models import storage
 from models.user import User
@@ -15,7 +15,6 @@ ignored_keys = ['id', 'created_at', 'updated_at', 'city_id', 'user_id']
 @app_views.route('/cities/<city_id>/places', strict_slashes=False,
                  methods=['GET', 'POST'])
 def all_places(city_id):
-    """ GET and POST request for all places """
     place_obj = storage.all(City)
     for key, val in place_obj.items():
         if val.id == city_id:
@@ -50,7 +49,6 @@ def all_places(city_id):
 @app_views.route('/places/<place_id>', strict_slashes=False,
                  methods=['GET', 'PUT', 'DELETE'])
 def places_by_id(place_id):
-    """ GET, DELETE and PUT requests for places by id """
     place_obj = storage.all(Place)
     for key, value in place_obj.items():
         if value.id == place_id:

@@ -44,7 +44,7 @@ def all_cities(state_id):
 @app_views.route('/cities/<city_id>', strict_slashes=False,
                  methods=['GET', 'PUT', 'DELETE'])
 def cities_by_id(city_id):
-    """ GET, DELETE and PUT requests for cities by id """
+    """ GET, DELETE and PUT cities by id """
     city_obj = storage.all(City)
     for key, value in city_obj.items():
         if value.id == city_id:
