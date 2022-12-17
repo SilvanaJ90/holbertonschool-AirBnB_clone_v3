@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-"""  Handles all requests for City objects """
+"""  State, create a new view for City objects that handles all default RESTFul API """
 
 from models import storage
 from api.v1.views import app_views
@@ -13,7 +13,7 @@ ignored_keys = ['id', 'created_at', 'updated_at', 'state_id']
 @app_views.route('/states/<state_id>/cities', strict_slashes=False,
                  methods=['GET', 'POST', 'POST'])
 def all_cities(state_id):
-    """ GET and POST request for all city """
+    """ GET, POST City objects of a State"""
     state_obj = storage.all(State)
     for key, value in state_obj.items():
         if value.id == state_id:
