@@ -2,7 +2,6 @@
 """city"""
 
 from api.v1.views import app_views
-import json
 from models import storage
 from flask import jsonify, make_response, request, abort
 from models.city import City
@@ -55,7 +54,7 @@ def post_cities(state_id):
     if not state:
         abort(404)
     req = request.get_json()
-    new_city  = City(**req)
+    new_city = City(**req)
     new_city.state_id = state.id
     new_city.save()
     return make_response(jsonify(new_city .to_dict()), 201)
