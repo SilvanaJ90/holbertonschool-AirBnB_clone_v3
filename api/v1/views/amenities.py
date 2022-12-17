@@ -46,21 +46,22 @@ def post_state():
     if 'name' not in request.get_json():
         abort(400, description="Missing name")
     new_amenities = Amenity(**request.get_json())
+    storage.new(new_amenities)
     new_amenities.save()
-    return make_response(jsonify(new_amenities.to_dict()), 201)
+    return jsonify(new_amenities.to_dict()), 201
 
 
 @app_views.route('/amenities/<amenity_id>', methods=['PUT'],
                  strict_slashes=False)
 def put_state(amenity_id):
     """Updates a Amenity object: PUT"""
-    amenities = storage.get(Amenity, amenity_id)
+    amenities = storage.get("Amenity", amenity_id)
     if amenities is None:
         abort(404, description="Not found")
     if not request.get_json():
         abort(400, description="Not a JSON")
     for key, value in request.get_json().items():
-        if key not in ['state_id', 'create_at', 'update_at']:
+        if key not in ['id', 'create_at', 'update_at']:
             setattr(amenities, key, value)
     storage.save()
     return make_response(jsonify(amenities.to_dict()), 200)
