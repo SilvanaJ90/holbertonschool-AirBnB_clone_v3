@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-"""   """
+"""  doc  """
 
 from models import storage
 from models.user import User
