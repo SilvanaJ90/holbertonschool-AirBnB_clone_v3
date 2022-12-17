@@ -39,7 +39,7 @@ def delete_place_id(state_id):
 
 
 @app_views.route('/cities/<city_id>/places', methods=['POST'], strict_slashes=False)
-def post_state():
+def post_place():
     """Creates a Place: POST"""
     if not request.get_json():
         abort(400, description="Not a JSON")
@@ -52,7 +52,7 @@ def post_state():
 
 @app_views.route('/api/v1/places/<place_id>', methods=['PUT'],
                  strict_slashes=False)
-def put_state(state_id):
+def put_place(state_id):
     """UUpdates a Place object: PUT"""
     places = storage.get("State", state_id)
     if places is None:
