@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-"""  State, create a new view for City objects that handles all default RESTFul API """
+""" City objects that handles all default RESTFul API """
 
 from models import storage
 from api.v1.views import app_views
