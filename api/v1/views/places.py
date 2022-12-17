@@ -54,13 +54,13 @@ def post_place():
                  strict_slashes=False)
 def put_place(state_id):
     """UUpdates a Place object: PUT"""
-    places = storage.get("State", state_id)
-    if places is None:
-        abort(404, description="Not found")
     if not request.get_json():
         abort(400, description="Not a JSON")
+    if not storage.get("State", state_id):
+        abort(404, description="Not found")
     for key, value in request.get_json().items():
-        if key not in ['state_id', 'create_at', 'update_at']:
+        if key not in  ['id', 'user_id', 'city_id', 'created_at', 'updated_at']:
+            places = storage.get("State", state_id)
             setattr(places, key, value)
     storage.save()
     return make_response(jsonify(places.to_dict()), 200)
