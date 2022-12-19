@@ -18,7 +18,7 @@ def get_all_states():
     if request.method == 'GET':
         state = storage.all(State)
         states = []
-        for key, value in state.values():
+        for key, value in state.items():
             states.append(value.to_dict())
         return jsonify(states)
 
@@ -42,13 +42,13 @@ def get_del_put_state_id(state_id):
     """ GET, DELETE and PUT requests for state by id """
     if request.method == 'GET':
         state = storage.all(State)
-        for key, value in state.values():
+        for key, value in state.items():
             if value.id == state_id:
                 return value.to_dict()
         abort(404)
     if request.method == 'DELETE':
         state = storage.all(State)
-        for key, value in state.values():
+        for key, value in state.items():
             if value.id == state_id:
                 storage.delete(value)
                 storage.save()
@@ -59,7 +59,7 @@ def get_del_put_state_id(state_id):
         if request.get_json(silent=True) is None:
             return 'Not a JSON', 400
         state = storage.all(State)
-        for key, value in state.values():
+        for key, value in state.items():
             if value.id == state_id:
                 for key in request.get_json(silent=True):
                     if key not in ignored:
