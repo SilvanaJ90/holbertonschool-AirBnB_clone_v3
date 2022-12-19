@@ -9,14 +9,14 @@ from models.place import Place
 from api.v1.views import app_views
 from flask import request, jsonify, abort
 
-ignored_keys = ['id', 'created_at', 'updated_at', 'city_id', 'user_id']
+ignored = ['id', 'created_at', 'updated_at', 'city_id', 'user_id']
 
 
 @app_views.route('/cities/<city_id>/places', strict_slashes=False,
                  methods=['GET', 'POST'])
 def all_places(city_id):
-    place_obj = storage.all(City)
-    for key, val in place_obj.items():
+    place = storage.all(City)
+    for key, val in place.items():
         if val.id == city_id:
             if request.method == 'GET':
                 place_list = []
@@ -28,18 +28,17 @@ def all_places(city_id):
 
             if request.method == 'POST':
                 place = Place()
-                data = request.get_json(silent=True)
-                if data is None:
+                if request.get_json(silent=True) is None:
                     return 'Not a JSON', 400
-                if 'user_id' not in data.keys():
+                if 'user_id' not in request.get_json(silent=True).keys():
                     return 'Missing user_id', 400
-                if 'name' not in data.keys():
+                if 'name' not in request.get_json(silent=True).keys():
                     return 'Missing name', 400
                 user = storage.all(User)
                 for keys, val in user.items():
-                    if val.id == data["user_id"]:
-                        for key in data:
-                            setattr(place, key, data[key])
+                    if val.id == request.get_json(silent=True)["user_id"]:
+                        for key in request.get_json(silent=True):
+                            setattr(place, key, request.get_json(silent=True)[key])
                         setattr(place, "city_id", city_id)
                         place.save()
                         return place.to_dict(), 201
@@ -61,7 +60,7 @@ def places_by_id(place_id):
                 if data is None:
                     return 'Not a JSON', 400
                 for key in data:
-                    if key not in ignored_keys:
+                    if key not in ignored:
                         setattr(value, key, data[key])
                 storage.save()
                 return value.to_dict(), 200
