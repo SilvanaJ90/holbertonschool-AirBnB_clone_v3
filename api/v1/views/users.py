@@ -47,7 +47,7 @@ def users_by_id(user_id):
         abort(404)
 
     if request.method == 'DELETE':
-        user_objects = storage.all(User)
+        user = storage.all(User)
         for key, value in user.items():
             if value.id == user_id:
                 storage.delete(value)
@@ -58,8 +58,8 @@ def users_by_id(user_id):
     if request.method == 'PUT':
         if request.get_json(silent=True) is None:
             return 'Not a JSON', 400
-        user_objects = storage.all(User)
-        for key, value in user_objects.items():
+        user = storage.all(User)
+        for key, value in user.items():
             if value.id == user_id:
                 for key in request.get_json(silent=True):
                     if key not in ignored:
