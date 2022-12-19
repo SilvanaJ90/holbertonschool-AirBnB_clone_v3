@@ -34,7 +34,8 @@ def all_cities(state_id):
                     return 'Missing name', 400
                 for key in request.get_json(silent=True):
                     if key not in ignored:
-                        setattr(cities, key, request.get_json(silent=True)[key])
+                        setattr(cities, key, request.get_json(
+                                silent=True)[key])
                     setattr(cities, "state_id", state_id)
                 cities.save()
                 return cities.to_dict(), 201
