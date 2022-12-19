@@ -11,7 +11,7 @@ from models.review import Review
 from api.v1.views import app_views
 from flask import request, jsonify, abort
 
-ignored_keys = ['id', 'user_id', 'place_id', 'created_at', 'updated_at']
+ignored = ['id', 'user_id', 'place_id', 'created_at', 'updated_at']
 
 
 @app_views.route('/places/<place_id>/reviews', strict_slashes=False,
@@ -31,18 +31,17 @@ def all_place_reviews(place_id):
 
             if request.method == 'POST':
                 review = Review()
-                valid_request = request.get_json(silent=True)
-                if valid_request is None:
+                if request.get_json(silent=True) is None:
                     return 'Not a JSON', 400
-                if 'user_id' not in valid_request.keys():
+                if 'user_id' not in request.get_json(silent=True).keys():
                     return 'Missing user_id', 400
-                if 'text' not in valid_request.keys():
+                if 'text' not in request.get_json(silent=True).keys():
                     return 'Missing text', 400
                 users = storage.all(User)
                 for key, value in users.items():
-                    if value.id == valid_request['user_id']:
-                        for k in valid_request:
-                            setattr(review, k, valid_request[k])
+                    if value.id == request.get_json(silent=True)['user_id']:
+                        for k in request.get_json(silent=True):
+                            setattr(review, k, request.get_json(silent=True)[k])
                         setattr(review, 'place_id', place_id)
                         review.save()
                         return review.to_dict(), 201
@@ -66,12 +65,11 @@ def review_by_id(review_id):
                 return {}, 200
 
             if request.method == 'PUT':
-                valid_request = request.get_json(silent=True)
-                if valid_request is None:
+                if request.get_json(silent=True) is None:
                     return 'Not a JSON', 400
-                for k in valid_request:
-                    if k not in ignored_keys:
-                        setattr(value, k, valid_request[k])
+                for k in request.get_json(silent=True):
+                    if k not in ignored:
+                        setattr(value, k, request.get_json(silent=True)[k])
                 storage.save()
                 return value.to_dict(), 200
     abort(404)
