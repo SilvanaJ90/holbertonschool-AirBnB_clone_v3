@@ -9,11 +9,12 @@ from flask import request, jsonify, abort
 
 ignored = ['id', 'created_at', 'updated_at']
 
+
 @app_views.route('/users', strict_slashes=False,
                  methods=['GET', 'POST'])
 def all_users():
     if request.method == 'GET':
-        user= storage.all(User)
+        user = storage.all(User)
         users = []
         for key, val in user.items():
             users.append(val.to_dict())
