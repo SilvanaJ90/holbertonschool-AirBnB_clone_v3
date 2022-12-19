@@ -8,50 +8,47 @@ from models.state import State
 from api.v1.views import app_views
 from flask import request, jsonify, abort
 
+ignored = ['id', 'created_at', 'updated_at']
 
-@app_views.route('/states',
-                 strict_slashes=False,
+
+@app_views.route('/states', strict_slashes=False,
                  methods=['GET', 'POST'])
-def all_states():
-    """ GET, POST Retrieves the list of  State objects """
+def get_all_states():
+    """ Retrieves the list of all State objects: GET, POST """
     if request.method == 'GET':
-        states = storage.all(State)
-        states_list = []
-        for key, value in states.items():
-            states_list.append(value.to_dict())
-        return jsonify(states_list)
+        state = storage.all(State)
+        states = []
+        for key, value in state.values():
+            states.append(value.to_dict())
+        return jsonify(states)
 
     if request.method == 'POST':
-        data = request.get_json(silent=True)
         state = State()
-        if data is None:
+        if request.get_json(silent=True) is None:
             return 'Not a JSON', 400
-        if 'name' not in data.keys():
+        if 'name' not in request.get_json(silent=True).keys():
             return 'Missing name', 400
-        ignored_keys = ['id', 'created_at', 'updated_at']
-        for key in data:
-            if key not in ignored_keys:
-                setattr(state, key, data[key])
+        for key in request.get_json(silent=True):
+            if key not in ignored:
+                setattr(state, key, request.get_json(silent=True)[key])
         state.save()
         return(state.to_dict()), 201
     abort(404)
 
 
-@app_views.route('/states/<state_id>',
-                 strict_slashes=False,
+@app_views.route('/states/<state_id>', strict_slashes=False,
                  methods=['GET', 'DELETE', 'PUT'])
-def states_by_id(state_id):
+def get_del_put_state_id(state_id):
     """ GET, DELETE and PUT requests for state by id """
     if request.method == 'GET':
-        states = storage.all(State)
-        for key, value in states.items():
+        state = storage.all(State)
+        for key, value in state.values():
             if value.id == state_id:
                 return value.to_dict()
         abort(404)
-
     if request.method == 'DELETE':
-        states = storage.all(State)
-        for key, value in states.items():
+        state = storage.all(State)
+        for key, value in state.values():
             if value.id == state_id:
                 storage.delete(value)
                 storage.save()
@@ -59,17 +56,14 @@ def states_by_id(state_id):
         abort(404)
 
     if request.method == 'PUT':
-        valid_request = request.get_json(silent=True)
-        if valid_request is None:
+        if request.get_json(silent=True) is None:
             return 'Not a JSON', 400
-
-        ignored_keys = ['id', 'created_at', 'updated_at']
-        states = storage.all(State)
-        for key, value in states.items():
+        state = storage.all(State)
+        for key, value in state.values():
             if value.id == state_id:
-                for key in valid_request:
-                    if key not in ignored_keys:
-                        setattr(value, key, valid_request[key])
+                for key in request.get_json(silent=True):
+                    if key not in ignored:
+                        setattr(value, key, request.get_json(silent=True)[key])
                 storage.save()
                 return value.to_dict(), 200
         abort(404)
