@@ -57,7 +57,8 @@ def cities_by_id(city_id):
                     return 'Not a JSON', 400
                 for key in request.get_json(silent=True):
                     if key not in ignored:
-                        setattr(value, key, request.get_json(silent=True)[key])
+                        setattr(value, key, request.get_json(
+                                silent=True)[key])
                 storage.save()
                 return value.to_dict(), 200
 
