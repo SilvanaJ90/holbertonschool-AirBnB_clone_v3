@@ -14,7 +14,7 @@ ignored = ['id', 'created_at', 'updated_at']
                  methods=['GET', 'POST'])
 def all_amenity():
     if request.method == 'GET':
-        amenity= storage.all(Amenity)
+        amenity = storage.all(Amenity)
         amenities = []
         for key, val in amenity.items():
             amenities.append(val.to_dict())
