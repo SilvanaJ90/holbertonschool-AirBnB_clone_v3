@@ -7,34 +7,34 @@ from api.v1.views import app_views
 from models.state import State, City
 from flask import request, jsonify, abort
 
-ignored_keys = ['id', 'created_at', 'updated_at', 'state_id']
+ignored = ['id', 'created_at', 'updated_at', 'state_id']
 
 
 @app_views.route('/states/<state_id>/cities', strict_slashes=False,
                  methods=['GET', 'POST', 'POST'])
 def all_cities(state_id):
     """ GET, POST City objects of a State"""
-    state_obj = storage.all(State)
-    for key, value in state_obj.items():
+    state = storage.all(State)
+    for key, value in state.items():
         if value.id == state_id:
             if request.method == 'GET':
-                city_obj = storage.all(City)
-                city_list = []
-                for key, value in city_obj.items():
+                city = storage.all(City)
+                cities = []
+                for key, value in city.items():
                     if value.state_id == state_id:
-                        city_list.append(value.to_dict())
-                return jsonify(city_list)
+                        cities.append(value.to_dict())
+                return jsonify(cities)
 
             if request.method == 'POST':
                 cities = City()
-                data = request.get_json(silent=True)
-                if data is None:
+                request.get_json(silent=True)
+                if request.get_json(silent=True) is None:
                     return 'Not a JSON', 400
-                if 'name' not in data.keys():
+                if 'name' not in request.get_json(silent=True).keys():
                     return 'Missing name', 400
-                for key in data:
-                    if key not in ignored_keys:
-                        setattr(cities, key, data[key])
+                for key in request.get_json(silent=True):
+                    if key not in ignored:
+                        setattr(cities, key, request.get_json(silent=True)[key])
                     setattr(cities, "state_id", state_id)
                 cities.save()
                 return cities.to_dict(), 201
@@ -45,20 +45,19 @@ def all_cities(state_id):
                  methods=['GET', 'PUT', 'DELETE'])
 def cities_by_id(city_id):
     """ GET, DELETE and PUT cities by id """
-    city_obj = storage.all(City)
-    for key, value in city_obj.items():
+    city = storage.all(City)
+    for key, value in city.items():
         if value.id == city_id:
 
             if request.method == 'GET':
                 return value.to_dict()
 
             if request.method == 'PUT':
-                data = request.get_json(silent=True)
-                if data is None:
+                if request.get_json(silent=True) is None:
                     return 'Not a JSON', 400
-                for key in data:
-                    if key not in ignored_keys:
-                        setattr(value, key, data[key])
+                for key in request.get_json(silent=True):
+                    if key not in ignored:
+                        setattr(value, key, request.get_json(silent=True)[key])
                 storage.save()
                 return value.to_dict(), 200
 
