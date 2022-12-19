@@ -41,7 +41,8 @@ def all_place_reviews(place_id):
                 for key, value in users.items():
                     if value.id == request.get_json(silent=True)['user_id']:
                         for k in request.get_json(silent=True):
-                            setattr(review, k, request.get_json(silent=True)[k])
+                            setattr(review, k, request.get_json(
+                                    silent=True)[k])
                         setattr(review, 'place_id', place_id)
                         review.save()
                         return review.to_dict(), 201
